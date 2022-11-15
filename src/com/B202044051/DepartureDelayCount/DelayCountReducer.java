@@ -17,17 +17,28 @@ public class DelayCountReducer extends Reducer<Text, IntWritable, Text, IntWrita
         mos = new MultipleOutputs<Text, IntWritable>(context);
     }
 
-
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
         int sum = 0;
+        String category = "";
+        Text outputKey = new Text();
+        String[] colums = key.toString().split(",");
+        outputKey.set(String.format("%s,%s", colums[1], colums[2]));
+        switch(colums[0]) {
+            case "D":
+                category = "departure";
+                break;
+            case "A":
+                category = "arrival";
+                break;
+        }
+
         for (IntWritable value: values) {
             sum += value.get();     // 횟수 더하기
         }
 
         result.set(sum);
         // context.write(key, result);
-        // mos.write
-        mos.write("departure", key, result);
+        mos.write(category, outputKey, result);
     }
 
     // close

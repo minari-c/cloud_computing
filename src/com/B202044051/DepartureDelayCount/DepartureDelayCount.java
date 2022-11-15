@@ -44,6 +44,14 @@ public class DepartureDelayCount {
                 , IntWritable.class
         );
 
+        MultipleOutputs.addNamedOutput(
+                job
+                , "arrival"
+                , TextOutputFormat.class
+                , Text.class
+                , IntWritable.class
+        );
+
         job.waitForCompletion(true);
     }
 }
